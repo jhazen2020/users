@@ -12,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
       secretOrKeyProvider: passportJwtSecret({
-        cache: true,
+        cache: false,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
         jwksUri: `${process.env.AUTH0_ISSUER_URL}.well-known/jwks.json`,
@@ -24,7 +24,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       algorithms: ['RS256'],
     });
   }
-
   validate(payload: unknown): unknown {
     return payload;
   }

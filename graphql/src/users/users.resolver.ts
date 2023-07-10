@@ -4,45 +4,49 @@ import {
 } from '@nestjs/common';
 import { Resolver, Query, Args, Int, Mutation } from '@nestjs/graphql'
 import { GqlAuthGuard } from 'src/authorization/gqlAuthGuard';
+import { UsersInput, UsersList, UsersReturn, Users, UsersUpdateInput } from './users.model';
+import { UsersService } from './users.service';
+import { CurrentUser } from './user.decorator.graphql';
+
 
 @Resolver()
 @Injectable()
 export class UsersResolver {
-    constructor() {}
+    constructor(
+        private usersService: UsersService
+    ) {}
 
-
-    @Query(returns => Int, { description: 'Get all users with a limit. Limit defaults to 10.', nullable: true})
-    async getAllUsers(@Args('limit', { type: () => Int }) limit: number[]) {
-        return limit;
+    @UseGuards(GqlAuthGuard)
+    @Query(() => [UsersReturn], { description: 'Get a list of users with a limit. Limit defaults to 10 if none is provided.', nullable: true})
+    async getAllUsers(@Args('input', { type: () => UsersList }) input: UsersList, @CurrentUser() user: any) {
+        const test = await this.usersService.getUsers(input.limit, input.cursor, input.order);
+        console.log(user);
+        return test;
     }
 
     @UseGuards(GqlAuthGuard)
-    @Query(returns => String,  {description: 'Get user by id.', nullable: true})
-    async getUser(@Args('id', { type: () => Int }) id: number[]) {
+    @Query(returns => String,  {description: 'Get user data by ID.', nullable: true})
+    async getUser(@Args('id', { type: () => Int }) id: number[], @CurrentUser() user: any) {
         return id;
     }
 
-    // @UseGuards(GqlAuthGuard)
-    // @Mutation()
-    // async deleteUser(@Args('input') input: String): Promise<void> {
-    //     return new Promise((resolve, reject) => {
-    //         return 'hello world'
-    //     });
-    // }
+    @UseGuards(GqlAuthGuard)
+    @Mutation(()=>Boolean)
+    async updateUser(@Args('input', { type: () => UsersUpdateInput }) input: UsersUpdateInput){
+        this.usersService.updateUser(input);
+        return true;
+    }
 
-    // @UseGuards(AuthGuard('jwt'))
-    // @Mutation()
-    // async update(@Args('input') input: String): Promise<void> {
-    //     return new Promise((resolve, reject) => {
-    //         return 'hello world'
-    //     });
-    // }
+    @UseGuards(GqlAuthGuard)
+    @Mutation(()=>UsersReturn)
+    async addUser(@Args('input', { type: () => UsersInput }) input: UsersInput){
+        return this.usersService.addUser(input);
+    }
 
-    // @UseGuards(AuthGuard('jwt'))
-    // @Mutation(returns => String)
-    // async deleteUser(@Args('id') id: number): Promise<void> {
-    //     return new Promise((resolve, reject) => {
-    //         return 'hello world'
-    //     });
-    // }
+    @UseGuards(GqlAuthGuard)
+    @Mutation(()=>Boolean)
+    async deleteUser(@Args('id', { type: () => Int }) id: number){
+        this.usersService.deleteUser(id);
+        return true;
+    }
 }
