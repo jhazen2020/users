@@ -5,8 +5,10 @@ import { AuthorizationModule } from './authorization/authorization.module';
 import { UsersModule } from './users/users.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { UsersResolver } from './users/users.resolver';
 import { GqlAuthGuard } from './authorization/gqlAuthGuard';
+
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { typeOrmConfig } from './../database/typeOrmConfig';
 
 @Module({
   imports: [
@@ -16,9 +18,10 @@ import { GqlAuthGuard } from './authorization/gqlAuthGuard';
       driver: ApolloDriver,
       autoSchemaFile: true,
       sortSchema: true,
-    })
+    }),
+    TypeOrmModule.forRoot(typeOrmConfig as TypeOrmModule)
   ],
   controllers: [AppController],
-  providers: [AppService, UsersResolver, GqlAuthGuard],
+  providers: [AppService, GqlAuthGuard],
 })
 export class AppModule {}
