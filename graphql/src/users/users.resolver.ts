@@ -25,9 +25,10 @@ export class UsersResolver {
     }
 
     @UseGuards(GqlAuthGuard)
-    @Query(returns => String,  {description: 'Get user data by ID.', nullable: true})
-    async getUser(@Args('id', { type: () => Int }) id: number[], @CurrentUser() user: any) {
-        return id;
+    @Query(returns => UsersReturn,  {description: 'Get user data by ID.', nullable: true})
+    async getUser(@Args('id', { type: () => Int }) id: number, @CurrentUser() user: any) {
+        console.log(user);
+        return this.usersService.getUser(id);
     }
 
     @UseGuards(GqlAuthGuard)
