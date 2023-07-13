@@ -18,7 +18,7 @@ services:
     environment:
       PORT: 3000
       AUTH0_ISSUER_URL: https://dev-tpq6khp7tkgiovnk.us.auth0.com/
-      AUTH0_AUDIENCE: api.jessehazen.net     
+      AUTH0_AUDIENCE: api.jessehazen.net
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: postgres
