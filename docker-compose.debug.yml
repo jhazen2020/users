@@ -10,20 +10,19 @@ services:
     networks: 
       - mynetwork
     ports:
-      - 3000:3000
+      - ${PORT}:3000
       - 9229:9229
     working_dir: /app
     volumes:
       - ./graphql:/app
     environment:
-      PORT: 3000
-      AUTH0_ISSUER_URL: https://dev-tpq6khp7tkgiovnk.us.auth0.com/
-      AUTH0_AUDIENCE: api.jessehazen.net
+      AUTH0_ISSUER_URL: ${AUTH0_ISSUER_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
       DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: password
-      DB_NAME: users
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
   db:
     image: postgres
     container_name: users_db
@@ -36,9 +35,9 @@ services:
       - ./graphql/database/create_user_db.sql:/docker-entrypoint-initdb.d/create_user_db.sql
       - /var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: users
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
 networks:
   mynetwork:
     name: mynetwork

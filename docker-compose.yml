@@ -6,37 +6,17 @@ services:
     image: node:18-alpine
     container_name: users_graphql
     restart: always
-    command: sh -c "yarn install && yarn start:dev"
-    networks: 
-      - mynetwork
+    command: sh -c "yarn install && yarn dev:migrations && yarn start:dev"
     ports:
-      - 3000:3000
+      - ${PORT}:3000
     working_dir: /app
     volumes:
       - ./graphql:/app
     environment:
-      PORT: 3000
-      AUTH0_ISSUER_URL: https://dev-tpq6khp7tkgiovnk.auth0.com/
-      AUTH0_AUDIENCE: api.jessehazen.net
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: password
-      DB_NAME: users
-  db:
-    image: postgres
-    container_name: users_db
-    restart: always
-    networks: 
-      - mynetwork
-    ports:
-      - 5432:5432
-    volumes:
-      - ./graphql/database/create_user_db.sql:/docker-entrypoint-initdb.d/create_user_db.sql
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: users
-networks:
-  mynetwork:
-    name: mynetwork
+      AUTH0_ISSUER_URL: ${AUTH0_ISSUER_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
