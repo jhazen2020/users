@@ -1,22 +1,28 @@
 import { Field, Int, InputType, ObjectType } from '@nestjs/graphql';
 import { UsersCategories, UsersCategoriesType } from './users_categories.model';
-import { IsEmail, IsNotEmpty, IsPhoneNumber, IsOptional } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsPhoneNumber,
+  IsOptional,
+} from 'class-validator';
+import { type } from 'os';
 
 @InputType()
 export class Users {
-  @Field(type => Int)
+  @Field((type) => Int)
   id: number;
 
   @IsNotEmpty()
   @Field({ nullable: false })
   firstName?: string;
-  
+
   @IsNotEmpty()
   @Field({ nullable: false })
   lastName?: string;
 
-
-  @IsPhoneNumber()
+  @IsOptional()
+  @IsPhoneNumber('US')
   @Field({ nullable: true })
   phoneNumber?: string;
 
@@ -25,21 +31,17 @@ export class Users {
   @Field({ nullable: false })
   email?: string;
 
-  @Field(type => UsersCategories)
+  @Field((type) => UsersCategories)
   user_category: UsersCategories;
 }
 
 @InputType()
 export class UsersUpdateInput {
-  @Field(type => Int)
-  id: number;
-
   @IsOptional()
   @IsNotEmpty()
   @Field({ nullable: true })
   firstName?: string;
-  
-  @IsOptional()
+
   @IsNotEmpty()
   @Field({ nullable: true })
   lastName?: string;
@@ -60,7 +62,7 @@ export class UsersInput {
   @IsNotEmpty()
   @Field({ nullable: false })
   firstName?: string;
-  
+
   @IsNotEmpty()
   @Field({ nullable: false })
   lastName?: string;
@@ -78,16 +80,16 @@ export class UsersInput {
 
 @ObjectType()
 export class UsersReturn {
-  @Field(type => Int)
+  @Field((type) => Int)
   id: number;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   firstName: string;
-  
-  @Field({nullable: true})
+
+  @Field({ nullable: true })
   lastName: string;
 
-  @Field()
+  @Field({ nullable: true })
   phoneNumber: string;
 
   @Field()
@@ -97,14 +99,15 @@ export class UsersReturn {
   usersCategories: UsersCategoriesType;
 }
 
+
 @InputType()
 export class UsersList {
-  @Field(type => Int)
+  @Field((type) => Int)
   limit: number;
 
-  @Field({ nullable: true })
-  cursor?: number;
+  @Field()
+  page: number;
 
-  @Field({ nullable: true })
-  order?: 'desc'|'asc'|'DESC'|'ASC';
+  @Field()
+  order: 'desc' | 'asc' | 'DESC' | 'ASC';
 }
