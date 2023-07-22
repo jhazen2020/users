@@ -16,8 +16,8 @@ export class Users {
   email: string;
 
   @Column()
-  phoneNumber: Date;
+  phoneNumber: string;
 
   @ManyToOne(() => UsersCategories, usersCategories => usersCategories.users)
-  usersCategories: UsersCategories;
+  usersCategories?: UsersCategories;
 }
