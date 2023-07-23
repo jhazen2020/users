@@ -3,6 +3,10 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as fs from 'fs';
 import cors = require('cors');
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 async function bootstrap() {
   const app =
     process.env.ENVIRONMENT === 'prod'
