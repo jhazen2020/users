@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as fs from 'fs';
 import cors = require('cors');
 import * as dotenv from 'dotenv';
+const { join } = require('path');
 
 dotenv.config();
 
@@ -12,8 +13,8 @@ async function bootstrap() {
     process.env.ENVIRONMENT === 'prod'
       ? await NestFactory.create(AppModule, {
           httpsOptions: {
-            key: fs.readFileSync('./secrets/private_cert_key.key'),
-            cert: fs.readFileSync('./secrets/public.crt'),
+            key: fs.readFileSync(join(process.cwd(),'/secrets/private_cert_key.key')),
+            cert: fs.readFileSync(join(process.cwd(),'/secrets/public.crt')),
           },
         })
       : await NestFactory.create(AppModule);
