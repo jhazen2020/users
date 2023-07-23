@@ -1,10 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import * as fs from 'fs';
 import cors = require('cors');
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app =
+    process.env.ENVIRONMENT === 'prod'
+      ? await NestFactory.create(AppModule, {
+          httpsOptions: {
+            key: fs.readFileSync('./secrets/private_cert_key.key'),
+            cert: fs.readFileSync('./secrets/public.crt'),
+          },
+        })
+      : await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+
   app.use(
     '/graphql',
     cors({
@@ -19,6 +29,7 @@ async function bootstrap() {
       ],
     }),
   );
+
   await app.listen(3000);
 }
 bootstrap();

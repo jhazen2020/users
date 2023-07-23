@@ -53,7 +53,6 @@ export class UsersResolver {
     for(let value of  data.values()){
       users.push(value)
     }
-   console.log('test',users);
     return users;
   }
 
