@@ -21,7 +21,6 @@ export class FakeUsersService {
         const user = (await this.cacheManager.get('fake_user_id-' + i)) as string;
         users.set(i,JSON.parse(user))
     }
-    console.log(users);
     return users;
   }
   async getFakeUsersDescendingOrder(
@@ -31,7 +30,6 @@ export class FakeUsersService {
    type userType = Map<number, Users>
     let users: userType = new Map();
     for (let i = startingIndex; i >= endIndex; i--) {
-        console.log(i);
       const user = (await this.cacheManager.get('fake_user_id-' + i)) as string;
       users.set(i,JSON.parse(user))
     }
