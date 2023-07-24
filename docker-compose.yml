@@ -1,8 +1,6 @@
 version: '3'
 services:
   app:
-    depends_on:
-      - db
     image: node:18-alpine
     container_name: users_graphql
     restart: always
