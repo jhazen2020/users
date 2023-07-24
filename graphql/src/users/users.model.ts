@@ -59,11 +59,11 @@ export class UsersUpdateInput {
 
 @InputType()
 export class UsersInput {
-  @IsNotEmpty()
+  @IsOptional()
   @Field({ nullable: false })
   firstName?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Field({ nullable: false })
   lastName?: string;
 
