@@ -13,7 +13,7 @@ async function bootstrap() {
     process.env.ENVIRONMENT === 'prod'
       ? await NestFactory.create(AppModule, {
           httpsOptions: {
-            key: fs.readFileSync(join(process.cwd(),'/secrets/private_cert_key.key')),
+            key: fs.readFileSync(join(process.cwd(),'/secrets/private_cert_key.pem')),
             cert: fs.readFileSync(join(process.cwd(),'/secrets/public.crt')),
           },
         })
