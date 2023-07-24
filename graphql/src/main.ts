@@ -28,6 +28,7 @@ async function bootstrap() {
         'http://localhost:3000',
         'https://studio.apollographql.com',
         'https://jessehazen.net:443',
+        'https://jessehazen.net',
         'http://jessehazen.net:80',
         'https://api.jessehazen.net',
         'https://api.jessehazen.net:443',
