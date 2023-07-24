@@ -32,7 +32,7 @@ export class UsersResolver {
     @CurrentUser() user: any,
   ): Promise<Users[] | []> {
     let users = [];
-    const email = 'jhazen2020@gmail.com';
+    const email = user['https://api.jessehazen.net/email'];
     const userDataPromise = await this.usersService.getUser(email);
     const countPromise = await this.usersService.getCountUsers();
     const [userData, count] = await Promise.all([
