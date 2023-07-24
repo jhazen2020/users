@@ -14,7 +14,7 @@ for (let i = 1; i < 150; i++) {
     firstName: firstName,
     lastName: lastName,
     email: email,
-    phone: phone,
+    phoneNumber: phone,
   });
 }
 const json = JSON.stringify(users);

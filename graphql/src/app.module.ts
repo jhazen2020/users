@@ -8,6 +8,8 @@ import { GqlAuthGuard } from './authorization/gqlAuthGuard';
 import { CacheModule } from '@nestjs/cache-manager';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { typeOrmConfig } from './../database/typeOrmConfig';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { typeOrmConfig } from './../database/typeOrmConfig';
     TypeOrmModule.forRoot(typeOrmConfig as TypeOrmModule),
     CacheModule.register({ isGlobal: true, max: 200 })
   ],
-  providers: [FakeUserService, GqlAuthGuard],
+  controllers: [AppController],
+  providers: [FakeUserService, GqlAuthGuard,AppService],
 })
 export class AppModule {}
