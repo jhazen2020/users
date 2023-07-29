@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { FakeUserService } from './users/fake-users-cache-preload.service';
+import { FakeUsersCacheService } from './users/fake-users-cache-preload.service';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { UsersModule } from './users/users.module';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -24,6 +24,6 @@ import { AppService } from './app.service';
     CacheModule.register({ isGlobal: true, max: 200 })
   ],
   controllers: [AppController],
-  providers: [FakeUserService, GqlAuthGuard,AppService],
+  providers: [FakeUsersCacheService, GqlAuthGuard,AppService],
 })
 export class AppModule {}

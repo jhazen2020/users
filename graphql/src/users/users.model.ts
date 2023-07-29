@@ -6,11 +6,10 @@ import {
   IsPhoneNumber,
   IsOptional,
 } from 'class-validator';
-import { type } from 'os';
 
 @InputType()
 export class Users {
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
 
   @IsNotEmpty()
@@ -31,18 +30,17 @@ export class Users {
   @Field({ nullable: false })
   email?: string;
 
-  @Field((type) => UsersCategories)
+  @Field(() => UsersCategories)
   user_category: UsersCategories;
 }
 
 @InputType()
 export class UsersUpdateInput {
   @IsOptional()
-  @IsNotEmpty()
   @Field({ nullable: true })
   firstName?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Field({ nullable: true })
   lastName?: string;
 
@@ -80,7 +78,7 @@ export class UsersInput {
 
 @ObjectType()
 export class UsersReturn {
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
 
   @Field({ nullable: true })
@@ -101,8 +99,8 @@ export class UsersReturn {
 
 
 @InputType()
-export class UsersList {
-  @Field((type) => Int)
+export class UsersListInput {
+  @Field(() => Int)
   limit: number;
 
   @Field()

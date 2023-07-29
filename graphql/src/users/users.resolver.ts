@@ -4,7 +4,7 @@ import GraphQLJSON from 'graphql-type-json'
 import { GqlAuthGuard } from 'src/authorization/gqlAuthGuard';
 import {
   UsersInput,
-  UsersList,
+  UsersListInput,
   UsersReturn,
   UsersUpdateInput,
 } from './users.model';
@@ -20,7 +20,7 @@ export class UsersResolver {
     private usersService: UsersService,
     private readonly fakeUsersService: FakeUsersService,
   ) {}
-
+  private emailMetaDataIndexName = `https://${process.env.AUTH0_AUDIENCE}/email`;
   @UseGuards(GqlAuthGuard)
   @Query(()=>GraphQLJSON, {
     description:
@@ -28,51 +28,54 @@ export class UsersResolver {
     nullable: true,
   })
   async getAllUsers(
-    @Args('input', { type: () => UsersList }) input: UsersList,
+    @Args('input', { type: () => UsersListInput }) input: UsersListInput,
     @CurrentUser() user: any,
   ): Promise<Users[] | []> {
-    let users = [];
-    const email = user['https://api.jessehazen.net/email'];
-    const userDataPromise = await this.usersService.getUser(email);
-    const countPromise = await this.usersService.getCountUsers();
-    const [userData, count] = await Promise.all([
-      userDataPromise,
-      countPromise,
+    let usersList: Users[]= [];
+    const email = user[this.emailMetaDataIndexName];
+    const currentUserPromise = await this.usersService.getUser(email);
+    const countUsersPromise = await this.usersService.getCountUsers();
+    const [currentUser, usersTotalCount] = await Promise.all([
+      currentUserPromise,
+      countUsersPromise,
     ]);
-    if (!userData || !email || !count) {
+    if (!currentUser || !email || !usersTotalCount) {
       return [];
     }
     
-    const data = await this.fakeUsersService.getFakeUsersWithCurrentUser(
+    const usersListMap = await this.fakeUsersService.getFakeUsersWithCurrentUser(
       input.page,
       input.limit,
-      count,
+      usersTotalCount,
       input.order,
-      userData,
+      currentUser,
     );
-    for(let value of  data.values()){
-      users.push(value)
+    if(usersListMap === undefined){
+      return usersList;
     }
-    return users;
+    for(let user of  usersListMap.values()){
+      usersList.push(user)
+    }
+    return usersList;
   }
 
   @UseGuards(GqlAuthGuard)
   @Query(() => UsersReturn, {
-    description: 'Get user data by ID.',
+    description: 'Get user data by email.',
     nullable: true,
   })
   async getUser(
     @Args('email', { type: () => String }) email: string,
     @CurrentUser() user: any,
   ) {
-    return user['https://api.jessehazen.net/email'] === email
+    return user[this.emailMetaDataIndexName] === email
       ? this.usersService.getUser(email)
       : null;
   }
 
   @UseGuards(GqlAuthGuard)
   @Query(() => Int, {
-    description: 'Get total users count'
+    description: 'Get total users count.'
   })
   async getUsersCount() {
     return await this.usersService.getCountUsers();
@@ -82,15 +85,21 @@ export class UsersResolver {
   @Mutation(() => Boolean)
   async updateUser(
     @Args('input', { type: () => UsersUpdateInput }) input: UsersUpdateInput,
+    @CurrentUser() user: any,
   ) {
-    this.usersService.updateUser(input);
-    return true;
+    console.log(user);
+    if(user[this.emailMetaDataIndexName] === input.email){
+      this.usersService.updateUser(input);
+      return true;
+    }
+    return false;
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => UsersReturn)
+  @Mutation(() => Boolean)
   async addUser(@Args('input', { type: () => UsersInput }) input: UsersInput) {
-    return this.usersService.addUser(input);
+    this.usersService.addUser(input);
+    return true;
   }
 
   @UseGuards(GqlAuthGuard)

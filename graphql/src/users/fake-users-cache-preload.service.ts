@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { Cache } from 'cache-manager';
 
-export class FakeUserService implements OnModuleInit {
+export class FakeUsersCacheService implements OnModuleInit {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
   async onModuleInit() {
     const fakeUsers = JSON.parse(
