@@ -12,9 +12,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
       secretOrKeyProvider: passportJwtSecret({
-        cache: false,
+        cache: true,
         rateLimit: true,
-        jwksRequestsPerMinute: 5,
+        jwksRequestsPerMinute: 500,
         jwksUri: `${process.env.AUTH0_ISSUER_URL}.well-known/jwks.json`,
       }),
 
