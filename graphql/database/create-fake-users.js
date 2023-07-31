@@ -2,6 +2,11 @@ const { faker } = require('@faker-js/faker');
 const fs = require('fs');
 const { join } = require('path');
 
+/**
+ * creates a json file with fake data.
+ * @date 7/31/2023 - 10:47:35 AM
+ *
+ */
 let users = [];
 for (let i = 1; i < 150; i++) {
   const firstName = faker.person.firstName();
@@ -19,6 +24,9 @@ for (let i = 1; i < 150; i++) {
 }
 const json = JSON.stringify(users);
 
-fs.writeFile(join(process.cwd(), '/database/fake-users.json'), json, 'utf8', () =>
-  console.log('fake-users.json has been created.'),
+fs.writeFile(
+  join(process.cwd(), '/database/fake-users.json'),
+  json,
+  'utf8',
+  () => console.log('fake-users.json has been created.'),
 );

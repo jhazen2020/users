@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -7,6 +6,15 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+/**
+ * Defining the JWT strategy and it's attributes for our authentication library.
+ * @date 7/31/2023 - 10:52:42 AM
+ *
+ * @export
+ * @class JwtStrategy
+ * @typedef {JwtStrategy}
+ * @extends {PassportStrategy(Strategy)}
+ */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {

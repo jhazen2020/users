@@ -8,6 +8,14 @@ const { join } = require('path');
 
 dotenv.config();
 
+/**
+ * Nest js start up.
+ * @todo move cors origin elements to the env. separating out dev and production.
+ * @date 7/31/2023 - 1:29:47 PM
+ *
+ * @async
+ * @returns {*}
+ */
 async function bootstrap() {
   const app =
     process.env.ENVIRONMENT === 'prod'

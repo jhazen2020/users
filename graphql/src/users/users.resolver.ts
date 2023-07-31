@@ -81,13 +81,24 @@ export class UsersResolver {
     return await this.usersService.getCountUsers();
   }
 
+  /**
+   * Update user via email. Email in the request must match the email in the
+   * auth token's metadata.
+   * @todo Only allow basic and admin users to access this. Admin user can bypass
+   * input email equaling auth token email check.
+   * @date 7/31/2023 - 2:00:15 PM
+   *
+   * @async
+   * @param {UsersUpdateInput} input
+   * @param {*} user
+   * @returns {unknown}
+   */
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Boolean)
   async updateUser(
     @Args('input', { type: () => UsersUpdateInput }) input: UsersUpdateInput,
     @CurrentUser() user: any,
   ) {
-    console.log(user);
     if(user[this.emailMetaDataIndexName] === input.email){
       this.usersService.updateUser(input);
       return true;
@@ -95,6 +106,16 @@ export class UsersResolver {
     return false;
   }
 
+  /**
+   * Adds user to the RDS users database.
+   * @todo this should only be available from the auth0 server, 
+   * after post login and email confirmation. Will add role for this.
+   * @date 7/31/2023 - 1:58:12 PM
+   *
+   * @async
+   * @param {UsersInput} input
+   * @returns {unknown}
+   */
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Boolean)
   async addUser(@Args('input', { type: () => UsersInput }) input: UsersInput) {

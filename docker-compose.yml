@@ -4,7 +4,7 @@ services:
     image: node:18-alpine
     container_name: users_graphql
     restart: always
-    command: sh -c "yarn install && yarn dev:migrations && yarn start:dev"
+    command: sh -c "yarn install && yarn dev:migrations && yarn start"
     ports:
       - ${PORT}:3000
     working_dir: /app

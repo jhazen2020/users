@@ -6,6 +6,14 @@ import { Repository, MoreThanOrEqual } from 'typeorm';
 import { ExceptionHandler } from 'lib/exception-handler';
 import { instanceToPlain } from 'class-transformer';
 
+/**
+ * Manages basic functionality of the RDS data source for users. 
+ * @date 7/31/2023 - 12:42:13 PM
+ * @todo add return types.
+ * @export
+ * @class UsersService
+ * @typedef {UsersService}
+ */
 @Injectable()
 export class UsersService {
   constructor(
@@ -26,28 +34,6 @@ export class UsersService {
       return await this.usersRepository.update({ email: user.email }, user);
     } catch (e) {
       this.exceptionHandler.graphqlErrorHandler('Unable to update user', e);
-    }
-  }
-  async getLoggedInUserWithFakeUsers(
-    limit: number = 10,
-    cursor: number | undefined = 0,
-    order: 'desc' | 'asc' | 'DESC' | 'ASC' = 'DESC',
-  ) {
-    try {
-      return await this.usersRepository.find({
-        relations: ['usersCategories'],
-        where: {
-          id: MoreThanOrEqual(cursor),
-        },
-        take: limit,
-        order: {
-          id: {
-            direction: order,
-          },
-        },
-      });
-    } catch (e) {
-      this.exceptionHandler.graphqlErrorHandler('Unable to get users list', e);
     }
   }
   async getUsers(
