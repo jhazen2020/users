@@ -6,10 +6,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlAuthGuard } from './authorization/gqlAuthGuard';
 import { CacheModule } from '@nestjs/cache-manager';
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './../database/typeOrmConfig';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -23,7 +21,6 @@ import { AppService } from './app.service';
     TypeOrmModule.forRoot(typeOrmConfig as TypeOrmModule),
     CacheModule.register({ isGlobal: true, max: 200 })
   ],
-  controllers: [AppController],
-  providers: [FakeUsersCacheService, GqlAuthGuard,AppService],
+  providers: [FakeUsersCacheService, GqlAuthGuard],
 })
 export class AppModule {}

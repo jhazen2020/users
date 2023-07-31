@@ -13,6 +13,8 @@ Docker, Typescript, TypeOrm, NestJs, NestJs cache and Auth0 are used in the back
 6. Copy the '.env.example' file to '.env'. Add variable values.
 7. Run docker compose for the 'docker-compose.debug.yml'. docker-compose -f docker-compose.debug.yml up
 
+You know should be able to go to http://localhost:3000/graphql. Port should be the value in your .env.
+
 ## Start up explanation.
 
 The docker container for the database will spin up first for development. This will add a new database called users and the additional extensions for the postgres db. Once the docker db has started, the NestJs container will start. This will add any migrations and seed the users database. At this point you will be able to use the service assuming, you have added the env variables correctly. http://localhost:3000
@@ -22,5 +24,7 @@ The docker container for the database will spin up first for development. This w
 This repos still needs a lot of work:
 1. Create unit tests.
 2. Comments through the code.
-3. Add CI/CD on merge.
+3. Add batch file for CI on merge. Use github actions.
 4. Add tests to the CI/CD.
+5. Add Roles with decorator for users resolver. (auth0 server, admin, basic user)
+6. Switch docker-compose.yml to use yarn build and yarn start:prod
