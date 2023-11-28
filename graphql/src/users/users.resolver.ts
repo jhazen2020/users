@@ -1,17 +1,17 @@
 import { UseGuards, Injectable } from '@nestjs/common';
 import { Resolver, Query, Args, Int, Mutation } from '@nestjs/graphql';
-import GraphQLJSON from 'graphql-type-json'
 import { GqlAuthGuard } from 'src/authorization/gqlAuthGuard';
+import {
+  Users as UserReturn,
+} from './users.model';
 import {
   UsersInput,
   UsersListInput,
-  UsersReturn,
   UsersUpdateInput,
-} from './users.model';
+} from './users.input';
 import { UsersService } from './users.service';
 import { FakeUsersService } from './fake-users.service';
 import { CurrentUser } from './user.decorator.graphql';
-import { Users } from './users.entity';
 
 @Resolver()
 @Injectable()
@@ -22,7 +22,7 @@ export class UsersResolver {
   ) {}
   private emailMetaDataIndexName = `https://${process.env.AUTH0_AUDIENCE}/email`;
   @UseGuards(GqlAuthGuard)
-  @Query(()=>GraphQLJSON, {
+  @Query(()=>[UserReturn], {
     description:
       'Get a list of users with a limit. Limit defaults to 10 if none is provided. All users will show as fake information unless it is the logged in user.',
     nullable: true,
@@ -30,8 +30,9 @@ export class UsersResolver {
   async getAllUsers(
     @Args('input', { type: () => UsersListInput }) input: UsersListInput,
     @CurrentUser() user: any,
-  ): Promise<Users[] | []> {
-    let usersList: Users[]= [];
+  ): Promise<UserReturn[]> {
+    
+    let usersList: UserReturn[]= [];
     const email = user[this.emailMetaDataIndexName];
     const currentUserPromise = await this.usersService.getUser(email);
     const countUsersPromise = await this.usersService.getCountUsers();
@@ -40,7 +41,7 @@ export class UsersResolver {
       countUsersPromise,
     ]);
     if (!currentUser || !email || !usersTotalCount) {
-      return [];
+      throw new Error('User not found.')
     }
     
     const usersListMap = await this.fakeUsersService.getFakeUsersWithCurrentUser(
@@ -51,16 +52,16 @@ export class UsersResolver {
       currentUser,
     );
     if(usersListMap === undefined){
-      return usersList;
+      throw new Error('Unable to create users list.')
     }
-    for(let user of  usersListMap.values()){
+    for(let user of usersListMap.values()){
       usersList.push(user)
     }
     return usersList;
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query(() => UsersReturn, {
+  @Query(() => UserReturn, {
     description: 'Get user data by email.',
     nullable: true,
   })

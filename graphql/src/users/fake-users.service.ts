@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Users } from './users.entity';
+import { Users } from './users.type';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { ExceptionHandler } from 'lib/exception-handler';

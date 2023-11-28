@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Users } from './users.entity';
-import { Users as usersModel, UsersInput } from './users.model';
+import { Users as UsersEntity } from './users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThanOrEqual } from 'typeorm';
 import { ExceptionHandler } from 'lib/exception-handler';
 import { instanceToPlain } from 'class-transformer';
+import { Users } from './users.type';
 
 /**
  * Manages basic functionality of the RDS data source for users. 
@@ -17,19 +17,19 @@ import { instanceToPlain } from 'class-transformer';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
+    @InjectRepository(UsersEntity)
+    private usersRepository: Repository<UsersEntity>,
     @Inject(ExceptionHandler)
     private exceptionHandler: ExceptionHandler,
   ) {}
-  async addUser(user: UsersInput) {
+  async addUser(user: Users) {
     try {
       return await this.usersRepository.insert(user);
     } catch (e) {
       this.exceptionHandler.graphqlErrorHandler('Unable to add user', e);
     }
   }
-  async updateUser(user: Omit<usersModel, 'user_category' | 'id'>) {
+  async updateUser(user: Users) {
     try {
       return await this.usersRepository.update({ email: user.email }, user);
     } catch (e) {

@@ -1,8 +1,8 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Int, InputType } from '@nestjs/graphql';
 import { UUID } from 'crypto';
 
-@ObjectType()
-export class UsersCategoriesType {
+@InputType()
+export class UsersCategories {
   @Field(type => Int)
   id: UUID;
 

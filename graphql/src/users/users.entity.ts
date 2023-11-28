@@ -3,7 +3,7 @@ import { UsersCategories } from './users_categories.entity';
 
 @Entity({schema: 'users'})
 export class Users {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column()
